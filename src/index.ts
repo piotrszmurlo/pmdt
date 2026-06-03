@@ -17,6 +17,7 @@ import { epicTasksCommand } from './commands/epic-tasks.ts';
 import { treeCommand } from './commands/tree.ts';
 import { openCommand } from './commands/open.ts';
 import { uiCommand } from './commands/ui.ts';
+import { docCommand } from './commands/doc.ts';
 
 const program = new Command();
 
@@ -38,6 +39,7 @@ program.addCommand(epicTasksCommand);
 program.addCommand(treeCommand);
 program.addCommand(openCommand);
 program.addCommand(uiCommand);
+program.addCommand(docCommand);
 
 try {
   await program.parseAsync(process.argv);

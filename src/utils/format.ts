@@ -1,6 +1,6 @@
 import matter from 'gray-matter';
 import yaml from 'js-yaml';
-import type { Status, Task, TaskFrontmatter, TaskSummary, TaskType } from '../core/types.ts';
+import type { Status, Task, TaskFrontmatter, TaskSummary, TaskType, Doc, DocFrontmatter } from '../core/types.ts';
 import { TASK_TYPES, STATUSES, PRIORITIES } from '../core/types.ts';
 
 export function parseFile(raw: string, filePath: string): TaskSummary | null {
@@ -47,6 +47,7 @@ export function serializeTask(task: Task): string {
 
   if (task.parent !== undefined) frontmatter.parent = task.parent;
   if (task.related !== undefined && task.related.length > 0) frontmatter.related = task.related;
+  if (task.docs !== undefined && task.docs.length > 0) frontmatter.docs = task.docs;
   if (task.tags !== undefined && task.tags.length > 0) frontmatter.tags = task.tags;
 
   const yamlStr = yaml.dump(frontmatter, {
@@ -92,5 +93,53 @@ function isValidFrontmatter(data: unknown): data is TaskFrontmatter {
   if (d['parent'] !== undefined && typeof d['parent'] !== 'string') return false;
   if (d['tags'] !== undefined && !Array.isArray(d['tags'])) return false;
   if (d['related'] !== undefined && !Array.isArray(d['related'])) return false;
+  if (d['docs'] !== undefined && !Array.isArray(d['docs'])) return false;
+  return true;
+}
+
+export function parseDocFile(raw: string, filePath: string, docPath: string): Doc | null {
+  try {
+    const { data, content } = matter(raw);
+    if (!isValidDocFrontmatter(data)) return null;
+    return {
+      ...(data as DocFrontmatter),
+      body: content,
+      filePath,
+      docPath,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function serializeDoc(doc: Doc): string {
+  const frontmatter: DocFrontmatter = {
+    title: doc.title,
+    created: doc.created,
+    updated: doc.updated,
+  };
+  if (doc.tags !== undefined && doc.tags.length > 0) frontmatter.tags = doc.tags;
+
+  const yamlStr = yaml.dump(frontmatter, {
+    lineWidth: -1,
+    quotingType: '"',
+    forceQuotes: false,
+  });
+
+  return `---\n${yamlStr}---\n${doc.body}`;
+}
+
+export function buildInitialDocBody(title: string, body?: string): string {
+  const content = body ? body.trimEnd() + '\n' : '';
+  return `# ${title}\n\n${content}`;
+}
+
+function isValidDocFrontmatter(data: unknown): data is DocFrontmatter {
+  if (!data || typeof data !== 'object') return false;
+  const d = data as Record<string, unknown>;
+  if (typeof d['title'] !== 'string') return false;
+  if (typeof d['created'] !== 'string') return false;
+  if (typeof d['updated'] !== 'string') return false;
+  if (d['tags'] !== undefined && !Array.isArray(d['tags'])) return false;
   return true;
 }

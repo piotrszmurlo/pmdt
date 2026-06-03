@@ -11,6 +11,7 @@ export const initCommand = new Command('init')
     const nodDir = path.join(root, '.nod');
     const configPath = path.join(nodDir, 'config.json');
     const tasksDir = path.join(nodDir, 'tasks');
+    const docsDir = path.join(nodDir, 'docs');
 
     if (fs.existsSync(configPath)) {
       console.log(chalk.yellow('Already a nod project.') + ` Config: ${configPath}`);
@@ -27,7 +28,13 @@ export const initCommand = new Command('init')
       fs.writeFileSync(path.join(tasksDir, '.gitkeep'), '', 'utf8');
     }
 
+    if (!fs.existsSync(docsDir)) {
+      fs.mkdirSync(docsDir);
+      fs.writeFileSync(path.join(docsDir, '.gitkeep'), '', 'utf8');
+    }
+
     console.log(chalk.green('Initialized nod project.'));
     console.log(`  Config: ${configPath}`);
     console.log(`  Tasks:  ${tasksDir}`);
+    console.log(`  Docs:   ${docsDir}`);
   });

@@ -76,6 +76,9 @@ export function renderTaskDetail(task: Task): string {
   if (task.related && task.related.length > 0) {
     lines.push(`${chalk.bold('Related:')}  ${task.related.map((r) => chalk.cyan(r)).join(', ')}`);
   }
+  if (task.docs && task.docs.length > 0) {
+    lines.push(`${chalk.bold('Docs:')}     ${task.docs.map((d) => chalk.blue(d)).join(', ')}`);
+  }
   if (task.tags && task.tags.length > 0) {
     lines.push(`${chalk.bold('Tags:')}     ${task.tags.map((t) => chalk.magenta(t)).join(', ')}`);
   }

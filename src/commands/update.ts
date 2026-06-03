@@ -17,6 +17,7 @@ export const updateCommand = new Command('update')
   .option('--tags <tags>', 'Replace tags (comma-separated)')
   .option('--parent <id>', 'Set parent task ID')
   .option('--related <ids>', 'Set related task IDs (comma-separated)')
+  .option('--docs <paths>', 'Set linked doc paths (comma-separated), e.g. "terminology/mastercard,apis/oauth"')
   .option(
     '--body <text>',
     'Replace the task description body. Suggested structure:\n' +
@@ -57,6 +58,11 @@ export const updateCommand = new Command('update')
       const related = (opts.related as string).split(',').map((s: string) => s.trim()).filter(Boolean);
       task = { ...task, related: related.length ? related : undefined };
       changes.push(`related updated`);
+    }
+    if (opts.docs !== undefined) {
+      const docs = (opts.docs as string).split(',').map((s: string) => s.trim()).filter(Boolean);
+      task = { ...task, docs: docs.length ? docs : undefined };
+      changes.push(`docs updated`);
     }
     if (opts.tags !== undefined) {
       const tags = (opts.tags as string).split(',').map((s: string) => s.trim()).filter(Boolean);

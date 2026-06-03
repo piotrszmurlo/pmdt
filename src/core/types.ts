@@ -10,6 +10,7 @@ export interface TaskFrontmatter {
   priority: Priority;
   parent?: string;
   related?: string[];
+  docs?: string[];
   created: string; // YYYY-MM-DD, set once on create
   updated: string; // YYYY-MM-DD, auto-updated on every write
   tags?: string[];
@@ -54,6 +55,19 @@ export interface TreeNode {
 export const TASK_TYPES: TaskType[] = ['epic', 'task', 'subtask', 'bug'];
 export const STATUSES: Status[] = ['todo', 'in-progress', 'backlog', 'done', 'cancelled'];
 export const PRIORITIES: Priority[] = ['critical', 'high', 'medium', 'low'];
+
+export interface DocFrontmatter {
+  title: string;
+  created: string; // YYYY-MM-DD
+  updated: string; // YYYY-MM-DD
+  tags?: string[];
+}
+
+export interface Doc extends DocFrontmatter {
+  body: string;       // raw markdown body after frontmatter
+  filePath: string;   // absolute path on disk
+  docPath: string;    // relative path within docs dir, e.g. "terminology/mastercard"
+}
 
 // Which types can be parents of each type
 export const ALLOWED_PARENTS: Record<TaskType, TaskType[]> = {
