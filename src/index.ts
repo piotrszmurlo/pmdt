@@ -2,7 +2,7 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { NodError } from './utils/errors.ts';
+import { PmdtError } from './utils/errors.ts';
 declare const __VERSION__: string;
 import { initCommand } from './commands/init.ts';
 import { createCommand } from './commands/create.ts';
@@ -22,8 +22,8 @@ import { docCommand } from './commands/doc.ts';
 const program = new Command();
 
 program
-  .name('nod')
-  .description('Markdown task manager for Claude Code')
+  .name('pmdt')
+  .description("Piotr's markdown tracker")
   .version(__VERSION__);
 
 program.addCommand(initCommand);
@@ -44,7 +44,7 @@ program.addCommand(docCommand);
 try {
   await program.parseAsync(process.argv);
 } catch (err) {
-  if (err instanceof NodError) {
+  if (err instanceof PmdtError) {
     console.error(chalk.red(`Error: ${err.message}`));
     process.exit(err.exitCode);
   }

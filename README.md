@@ -1,6 +1,8 @@
-# nod
+# pmdt
 
-A task manager where each task is a markdown file. Works great with git and Claude Code.
+Piotr's markdown tracker. Each task is a markdown file. Works with git and a local Kanban UI.
+
+Forked from [nod](https://github.com/onmyway133/nod).
 
 ![](images/board.png)
 
@@ -9,15 +11,16 @@ A task manager where each task is a markdown file. Works great with git and Clau
 Requires [Bun](https://bun.sh).
 
 ```bash
-npm install -g @onmyway133/nod
+bun install
+bun run src/index.ts --help
 ```
 
 ## How it works
 
-Each task lives in its own `.md` file inside `.nod/tasks/`:
+Each task lives in its own `.md` file inside `.pmdt/tasks/`:
 
 ```
-.nod/
+.pmdt/
   config.json
   tasks/
     epic-1-onboarding.md
@@ -25,7 +28,7 @@ Each task lives in its own `.md` file inside `.nod/tasks/`:
     subtask-3-write-migrations.md
 ```
 
-Tasks have a YAML header with fields like status, priority, and parent. The rest of the file is free-form markdown — description, notes, work log, anything you want.
+Tasks have a YAML header with fields like status, priority, and parent. The rest of the file is free-form markdown: description, notes, work log, anything you want.
 
 Because tasks are plain files, you can commit them to git, review diffs, and read them in any editor.
 
@@ -33,117 +36,117 @@ Because tasks are plain files, you can commit them to git, review diffs, and rea
 
 ```bash
 cd my-project
-nod init
+pmdt init
 
-nod create epic "Build auth system"
-nod create task "Design database schema" --parent epic-1 --priority high
-nod create subtask "Write migrations" --parent task-2
-nod create bug "Fix token expiry" --parent task-2
+pmdt create epic "Build auth system"
+pmdt create task "Design database schema" --parent epic-1 --priority high
+pmdt create subtask "Write migrations" --parent task-2
+pmdt create bug "Fix token expiry" --parent task-2
 
-nod available        # what to work on
-nod tree epic-1      # visual overview
-nod ui               # open Kanban board in browser
+pmdt available        # what to work on
+pmdt tree epic-1      # visual overview
+pmdt ui               # open Kanban board in browser
 ```
 
 ## Commands
 
-### `nod init`
-Set up a nod project in the current directory. Creates `.nod/` with `config.json` and a `tasks/` subfolder inside it.
+### `pmdt init`
+Set up a pmdt project in the current directory. Creates `.pmdt/` with `config.json` and a `tasks/` subfolder inside it.
 
-### `nod create <type> <title>`
+### `pmdt create <type> <title>`
 Create a task. Types: `epic`, `task`, `subtask`, `bug`.
 
 ```bash
-nod create epic "Launch v2"
-nod create task "Write tests" --parent epic-1 --priority high
-nod create bug "Crash on logout" --parent task-3 --tags auth,crash
+pmdt create epic "Launch v2"
+pmdt create task "Write tests" --parent epic-1 --priority high
+pmdt create bug "Crash on logout" --parent task-3 --tags auth,crash
 ```
 
 Options: `--parent <id>`, `--priority <p>`, `--tags <t1,t2>`
 
-### `nod list`
+### `pmdt list`
 List tasks with optional filters.
 
 ```bash
-nod list
-nod list --status todo
-nod list --priority high
-nod list --type task --parent epic-1
-nod list --json
+pmdt list
+pmdt list --status todo
+pmdt list --priority high
+pmdt list --type task --parent epic-1
+pmdt list --json
 ```
 
-### `nod available`
+### `pmdt available`
 Show tasks ready to work on (`todo` or `in-progress`), sorted by priority.
 
 ```bash
-nod available
-nod available --json
+pmdt available
+pmdt available --json
 ```
 
-### `nod get <id>`
+### `pmdt get <id>`
 Show a task's full content.
 
 ```bash
-nod get task-2
-nod get task-2 --json
+pmdt get task-2
+pmdt get task-2 --json
 ```
 
-### `nod update <id>`
+### `pmdt update <id>`
 Change task fields.
 
 ```bash
-nod update task-2 --status in-progress
-nod update task-2 --priority critical
-nod update task-2 --title "New title"
-nod update task-2 --tags backend,auth
+pmdt update task-2 --status in-progress
+pmdt update task-2 --priority critical
+pmdt update task-2 --title "New title"
+pmdt update task-2 --tags backend,auth
 ```
 
-### `nod note <id> <text>`
+### `pmdt note <id> <text>`
 Append a timestamped note to the task's Work Log.
 
 ```bash
-nod note task-2 "Decided to use UUIDs for user IDs"
+pmdt note task-2 "Decided to use UUIDs for user IDs"
 ```
 
-### `nod subtasks <id>`
+### `pmdt subtasks <id>`
 List direct children of a task.
 
 ```bash
-nod subtasks task-2
-nod subtasks task-2 --json
+pmdt subtasks task-2
+pmdt subtasks task-2 --json
 ```
 
-### `nod epic-tasks <id>`
+### `pmdt epic-tasks <id>`
 List all tasks and subtasks inside an epic.
 
 ```bash
-nod epic-tasks epic-1
-nod epic-tasks epic-1 --json
+pmdt epic-tasks epic-1
+pmdt epic-tasks epic-1 --json
 ```
 
-### `nod tree <id>`
+### `pmdt tree <id>`
 Show the task hierarchy as a tree.
 
 ```bash
-nod tree epic-1
+pmdt tree epic-1
 # epic-1 [in-progress] Build auth system
 # └── task-2 [in-progress] Design database schema
 #     └── subtask-3 [todo] Write migrations
 ```
 
-### `nod open <id>`
+### `pmdt open <id>`
 Open the task file in `$EDITOR`.
 
 ```bash
-nod open task-2
+pmdt open task-2
 ```
 
-### `nod ui`
-Open a Kanban board in the browser at `http://localhost:7777`. Reflects the current state of your `.nod/tasks/` folder and auto-refreshes every 3 seconds.
+### `pmdt ui`
+Open a Kanban board in the browser at `http://localhost:7777`. Reflects the current state of your `.pmdt/tasks/` folder and auto-refreshes every 3 seconds.
 
 ```bash
-nod ui
-nod ui --port 8080
+pmdt ui
+pmdt ui --port 8080
 ```
 
 ## Task file format
@@ -183,13 +186,13 @@ Looking at PostgreSQL with UUID primary keys.
 
 `critical` · `high` · `medium` · `low`
 
-## Using with Claude Code
+## Using with an agent
 
 ```bash
-nod available --json          # pick next task
-nod get task-2 --json         # read full context
-nod update task-2 --status in-progress
-nod note task-2 "Changed X because Y"
-nod update task-2 --status done
-nod epic-tasks epic-1 --json  # check epic progress
+pmdt available --json          # pick next task
+pmdt get task-2 --json         # read full context
+pmdt update task-2 --status in-progress
+pmdt note task-2 "Changed X because Y"
+pmdt update task-2 --status done
+pmdt epic-tasks epic-1 --json  # check epic progress
 ```

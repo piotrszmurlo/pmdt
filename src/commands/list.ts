@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { findNodRoot } from '../core/id.ts';
+import { findPmdtRoot } from '../core/id.ts';
 import { loadAllSummaries } from '../core/store.ts';
 import { filterTasks, sortByPriority } from '../core/query.ts';
 import { renderTable } from '../utils/display.ts';
@@ -14,7 +14,7 @@ export const listCommand = new Command('list')
   .option('--tags <tags>', 'Filter by tags (comma-separated, all must match)')
   .option('--json', 'Output as JSON')
   .action((opts) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const all = loadAllSummaries(root);
 
     const tags = opts.tags

@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { findNodRoot } from '../core/id.ts';
+import { findPmdtRoot } from '../core/id.ts';
 import { loadAllSummaries } from '../core/store.ts';
 import { getBacklog, sortByPriority } from '../core/query.ts';
 import { renderTable } from '../utils/display.ts';
@@ -12,7 +12,7 @@ export const backlogCommand = new Command('backlog')
   .option('--parent <id>', 'Filter by parent task ID')
   .option('--json', 'Output as JSON')
   .action((opts) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const all = loadAllSummaries(root);
 
     const backlog = getBacklog(all, {

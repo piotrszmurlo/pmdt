@@ -4,7 +4,7 @@ import { parseFile, parseFullFile, serializeTask, buildInitialBody, parseDocFile
 import type { Task, TaskFrontmatter, TaskSummary, Doc, DocFrontmatter } from './types.ts';
 import { NotFoundError } from '../utils/errors.ts';
 
-const TASKS_DIR = '.nod/tasks';
+const TASKS_DIR = '.pmdt/tasks';
 
 export function tasksDir(root: string): string {
   return path.join(root, TASKS_DIR);
@@ -80,7 +80,7 @@ export function renameTask(task: Task, newFilename: string): Task {
   return updated;
 }
 
-const DOCS_DIR = '.nod/docs';
+const DOCS_DIR = '.pmdt/docs';
 
 export function docsDir(root: string): string {
   return path.join(root, DOCS_DIR);

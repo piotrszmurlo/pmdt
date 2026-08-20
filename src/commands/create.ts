@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { findNodRoot, nextCounter, generateId, generateFilename } from '../core/id.ts';
+import { findPmdtRoot, nextCounter, generateId, generateFilename } from '../core/id.ts';
 import { createTask, findById, loadAllSummaries } from '../core/store.ts';
 import type { TaskFrontmatter, TaskType, Priority } from '../core/types.ts';
 import { ALLOWED_PARENTS, TASK_TYPES, PRIORITIES } from '../core/types.ts';
@@ -33,7 +33,7 @@ export const createCommand = new Command('create')
 
     const taskType = type as TaskType;
     const priority = opts.priority as Priority;
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const all = loadAllSummaries(root);
 
     // Validate parent
@@ -76,7 +76,7 @@ export const createCommand = new Command('create')
     };
 
     const task = createTask(root, frontmatter, filename, opts.body as string | undefined);
-    console.log(chalk.green(`Created ${id}`) + ` → .nod/tasks/${filename}`);
+    console.log(chalk.green(`Created ${id}`) + ` → .pmdt/tasks/${filename}`);
     if (opts.parent) {
       console.log(chalk.dim(`  Parent: ${opts.parent}`));
     }

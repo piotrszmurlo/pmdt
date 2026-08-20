@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { findNodRoot } from '../core/id.ts';
+import { findPmdtRoot } from '../core/id.ts';
 import { findById, loadAllSummaries } from '../core/store.ts';
 import { getDescendants, sortByPriority } from '../core/query.ts';
 import { renderTable } from '../utils/display.ts';
@@ -11,7 +11,7 @@ export const epicTasksCommand = new Command('epic-tasks')
   .argument('<id>', 'Epic ID')
   .option('--json', 'Output as JSON')
   .action((id: string, opts) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const epic = findById(root, id);
 
     if (epic.type !== 'epic') {

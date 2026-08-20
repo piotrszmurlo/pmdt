@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Build script: bundles src/index.ts into dist/nod.js
+ * Build script: bundles src/index.ts into dist/pmdt.js
  * - Inlines app.html as a string via the .html:text loader
  * - Prepends #!/usr/bin/env bun shebang
  * - Makes the output executable
@@ -9,15 +9,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const OUT = path.join(import.meta.dir, '../dist/nod.js');
+const OUT = path.join(import.meta.dir, '../dist/pmdt.js');
 const pkg = JSON.parse(fs.readFileSync(path.join(import.meta.dir, '../package.json'), 'utf8'));
 
-console.log('Building nod…');
+console.log('Building pmdt…');
 
 const result = await Bun.build({
   entrypoints: ['./src/index.ts'],
   outdir: './dist',
-  naming: 'nod.js',
+  naming: 'pmdt.js',
   target: 'bun',
   minify: false,
   sourcemap: 'none',
@@ -42,4 +42,4 @@ if (!content.startsWith('#!')) {
 fs.chmodSync(OUT, 0o755);
 
 const size = (fs.statSync(OUT).size / 1024).toFixed(1);
-console.log(`✓ dist/nod.js  (${size} KB)`);
+console.log(`✓ dist/pmdt.js  (${size} KB)`);

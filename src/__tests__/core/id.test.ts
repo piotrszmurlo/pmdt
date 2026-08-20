@@ -14,14 +14,14 @@ import {
 // ---------------------------------------------------------------------------
 
 async function withTempProject(fn: (root: string) => Promise<void>) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nod-test-'));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'pmdt-test-'));
   try {
-    fs.mkdirSync(path.join(root, '.nod'));
+    fs.mkdirSync(path.join(root, '.pmdt'));
     fs.writeFileSync(
-      path.join(root, '.nod', 'config.json'),
+      path.join(root, '.pmdt', 'config.json'),
       JSON.stringify({ counter: 0, version: '1' })
     );
-    fs.mkdirSync(path.join(root, '.nod', 'tasks'));
+    fs.mkdirSync(path.join(root, '.pmdt', 'tasks'));
     await fn(root);
   } finally {
     fs.rmSync(root, { recursive: true });

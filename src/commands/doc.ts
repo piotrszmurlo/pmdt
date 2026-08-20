@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { spawnSync } from 'child_process';
 import chalk from 'chalk';
-import { findNodRoot } from '../core/id.ts';
+import { findPmdtRoot } from '../core/id.ts';
 import { createDoc, findDocByPath, loadAllDocs, saveDoc } from '../core/store.ts';
 import type { Doc } from '../core/types.ts';
 
@@ -48,21 +48,21 @@ function titleFromPath(docPath: string): string {
 }
 
 const docCreateCommand = new Command('create')
-  .description('Create a new doc at the given path (creates .nod/docs/<path>.md)')
+  .description('Create a new doc at the given path (creates .pmdt/docs/<path>.md)')
   .argument('<path>', 'Doc path using / for folders, e.g. terminology/mastercard or apis/oauth')
   .option('--title <title>', 'Doc title (defaults to titlecased last path segment)')
   .option('--body <text>', 'Initial body content in markdown')
   .option('--tags <tags>', 'Comma-separated tags, e.g. "payments,api"')
   .addHelpText('after', `
 Examples:
-  nod doc create terminology/mastercard
-  nod doc create apis/oauth --body "## Auth Flow\\n1. Get token\\n2. Use Bearer header"
-  nod doc create decisions/use-polling --title "Why we use polling" --tags "architecture"
+  pmdt doc create terminology/mastercard
+  pmdt doc create apis/oauth --body "## Auth Flow\\n1. Get token\\n2. Use Bearer header"
+  pmdt doc create decisions/use-polling --title "Why we use polling" --tags "architecture"
 
-Note: LLMs can also write to .nod/docs/<path>.md directly. The file format is
+Note: LLMs can also write to .pmdt/docs/<path>.md directly. The file format is
 YAML frontmatter (title, created, updated, tags) followed by markdown body.`)
   .action((docPath: string, opts: { title?: string; body?: string; tags?: string }) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const title = opts.title ?? titleFromPath(docPath);
     const tags = opts.tags ? opts.tags.split(',').map((t) => t.trim()).filter(Boolean) : undefined;
     const doc = createDoc(root, docPath, title, opts.body, tags);
@@ -71,11 +71,11 @@ YAML frontmatter (title, created, updated, tags) followed by markdown body.`)
   });
 
 const docListCommand = new Command('list')
-  .description('List all docs in .nod/docs/ (recursively)')
+  .description('List all docs in .pmdt/docs/ (recursively)')
   .option('--tags <tag>', 'Filter by tag')
   .option('--json', 'Output as JSON array with filePath, docPath, title, tags, body')
   .action((opts: { tags?: string; json?: boolean }) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     let docs = loadAllDocs(root);
     if (opts.tags) {
       docs = docs.filter((d) => d.tags?.includes(opts.tags!));
@@ -92,7 +92,7 @@ const docShowCommand = new Command('show')
   .argument('<path>', 'Doc path, e.g. terminology/mastercard')
   .option('--json', 'Output as JSON (includes filePath for direct editing)')
   .action((docPath: string, opts: { json?: boolean }) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const doc = findDocByPath(root, docPath);
     if (opts.json) {
       console.log(JSON.stringify(doc, null, 2));
@@ -117,7 +117,7 @@ const docUpdateCommand = new Command('update')
   .option('--tags <tags>', 'Comma-separated tags (replaces all existing tags)')
   .option('--body <text>', 'Replace the entire body content (markdown)')
   .action((docPath: string, opts: { title?: string; tags?: string; body?: string }) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const doc = findDocByPath(root, docPath);
     const updated = { ...doc };
     if (opts.title) updated.title = opts.title;
@@ -136,16 +136,16 @@ const docOpenCommand = new Command('open')
   .description('Open a doc in $EDITOR')
   .argument('<path>', 'Doc path')
   .action((docPath: string) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const doc = findDocByPath(root, docPath);
     const editor = process.env['EDITOR'] ?? process.env['VISUAL'] ?? 'vim';
     spawnSync(editor, [doc.filePath], { stdio: 'inherit' });
   });
 
 export const docCommand = new Command('doc')
-  .description('Store and retrieve knowledge documents in .nod/docs/')
+  .description('Store and retrieve knowledge documents in .pmdt/docs/')
   .addHelpText('after', `
-Docs are free-form markdown files organized by path under .nod/docs/.
+Docs are free-form markdown files organized by path under .pmdt/docs/.
 Use them to capture API findings, agreed terminology, architecture decisions,
 brainstorm outputs, runbooks, or any reference material.
 
@@ -159,17 +159,17 @@ File format:
   # My Doc
   ...markdown body...
 
-LLMs can read and write .nod/docs/**/*.md files directly — use "nod doc show <path> --json"
+LLMs can read and write .pmdt/docs/**/*.md files directly — use "pmdt doc show <path> --json"
 to get the filePath, then edit the file in place. The frontmatter updated date is
-auto-refreshed by "nod doc update"; for direct edits, update it manually if desired.
+auto-refreshed by "pmdt doc update"; for direct edits, update it manually if desired.
 
 Examples:
-  nod doc create terminology/mastercard     # agreed definitions from a session
-  nod doc create apis/oauth --tags "auth"   # API reference notes
-  nod doc create decisions/use-polling      # architecture rationale
-  nod doc list
-  nod doc show terminology/mastercard
-  nod doc update terminology/mastercard --body "Authorization = ..."`)
+  pmdt doc create terminology/mastercard     # agreed definitions from a session
+  pmdt doc create apis/oauth --tags "auth"   # API reference notes
+  pmdt doc create decisions/use-polling      # architecture rationale
+  pmdt doc list
+  pmdt doc show terminology/mastercard
+  pmdt doc update terminology/mastercard --body "Authorization = ..."`)
   .addCommand(docCreateCommand)
   .addCommand(docListCommand)
   .addCommand(docShowCommand)

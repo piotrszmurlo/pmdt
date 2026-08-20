@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { findNodRoot } from '../core/id.ts';
+import { findPmdtRoot } from '../core/id.ts';
 import { findById, loadAllSummaries } from '../core/store.ts';
 import { getChildren, sortByPriority } from '../core/query.ts';
 import { renderTable } from '../utils/display.ts';
@@ -10,7 +10,7 @@ export const subtasksCommand = new Command('subtasks')
   .argument('<id>', 'Task ID')
   .option('--json', 'Output as JSON')
   .action((id: string, opts) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     findById(root, id); // validate exists
     const all = loadAllSummaries(root);
     const children = sortByPriority(getChildren(all, id));

@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { findNodRoot } from '../core/id.ts';
+import { findPmdtRoot } from '../core/id.ts';
 import { findById, loadTask, writeTask } from '../core/store.ts';
 
 const WORK_LOG_HEADING = '## Work Log';
@@ -10,7 +10,7 @@ export const noteCommand = new Command('note')
   .argument('<id>', 'Task ID')
   .argument('<text>', 'Note text')
   .action((id: string, text: string) => {
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const summary = findById(root, id);
     const task = loadTask(summary.filePath);
 

@@ -1,4 +1,4 @@
-import { findNodRoot } from '../core/id.ts';
+import { findPmdtRoot } from '../core/id.ts';
 import { loadAllSummaries, findById, loadTask, writeTask } from '../core/store.ts';
 import { seedDemoData } from '../core/seed.ts';
 import type { Status, Priority } from '../core/types.ts';
@@ -15,7 +15,7 @@ function jsonResponse(data: unknown, status = 200): Response {
 }
 
 export function createServer(port: number) {
-  const root = findNodRoot(process.cwd());
+  const root = findPmdtRoot(process.cwd());
 
   return Bun.serve({
     port,

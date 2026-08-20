@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import * as path from 'path';
-import { findNodRoot, generateFilename } from '../core/id.ts';
+import { findPmdtRoot, generateFilename } from '../core/id.ts';
 import { findById, loadTask, writeTask, renameTask } from '../core/store.ts';
 import type { Status, Priority } from '../core/types.ts';
 import { STATUSES, PRIORITIES } from '../core/types.ts';
@@ -37,7 +37,7 @@ export const updateCommand = new Command('update')
       throw new ValidationError(`Invalid priority "${opts.priority}". Must be one of: ${PRIORITIES.join(', ')}`);
     }
 
-    const root = findNodRoot(process.cwd());
+    const root = findPmdtRoot(process.cwd());
     const summary = findById(root, id);
     let task = loadTask(summary.filePath);
     const changes: string[] = [];

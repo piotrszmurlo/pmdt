@@ -12,7 +12,7 @@ export const uiCommand = new Command('ui')
 
     const server = createServer(port);
 
-    console.log(`nod ui running at ${url}`);
+    console.log(`pmdt ui running at ${url}`);
     console.log('Press Ctrl+C to stop.');
 
     // Open browser

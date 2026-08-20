@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import type { NodConfig, TaskType } from './types.ts';
+import type { PmdtConfig, TaskType } from './types.ts';
 import { NotInProjectError } from '../utils/errors.ts';
 
-const CONFIG_DIR = '.nod';
+const CONFIG_DIR = '.pmdt';
 const CONFIG_FILE = 'config.json';
 
-export function findNodRoot(startDir: string): string {
+export function findPmdtRoot(startDir: string): string {
   let dir = startDir;
   while (true) {
     if (fs.existsSync(path.join(dir, CONFIG_DIR))) {
@@ -20,15 +20,15 @@ export function findNodRoot(startDir: string): string {
   }
 }
 
-export function readConfig(root: string): NodConfig {
+export function readConfig(root: string): PmdtConfig {
   const configPath = path.join(root, CONFIG_DIR, CONFIG_FILE);
   if (!fs.existsSync(configPath)) {
     throw new NotInProjectError();
   }
-  return JSON.parse(fs.readFileSync(configPath, 'utf8')) as NodConfig;
+  return JSON.parse(fs.readFileSync(configPath, 'utf8')) as PmdtConfig;
 }
 
-export function writeConfig(root: string, config: NodConfig): void {
+export function writeConfig(root: string, config: PmdtConfig): void {
   const configPath = path.join(root, CONFIG_DIR, CONFIG_FILE);
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n', 'utf8');
 }

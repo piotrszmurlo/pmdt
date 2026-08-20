@@ -25,7 +25,7 @@ export interface TaskSummary extends TaskFrontmatter {
   filePath: string; // frontmatter only, no body loaded
 }
 
-export interface NodConfig {
+export interface PmdtConfig {
   counter: number;
   version: string;
 }
